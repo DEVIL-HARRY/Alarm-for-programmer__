@@ -1,0 +1,62 @@
+
+# 9am - 5pm  -- Job time
+# Water - water.mp3  (3 litres) - Drank - log -- 200 ml  = 15 times = 1 Glass/32 min
+# Eyes - Eyes.mp3 - every 40 min - EyDone
+# Physical activity -  Physical.mp3 every 60 min - ExDone
+
+# ------------------------------------------------------------------------------------------------
+
+from pygame import mixer
+from datetime import datetime
+from time import time
+
+
+def musicOnLoop(file, stopper):
+    mixer.init()
+    mixer.music.load(file)
+    mixer.music.play()
+
+    while True:
+        a = input()
+        if a == stopper:
+            mixer.music.stop()
+            break
+
+
+def log_now(msg):
+    with open("mylogs.txt", "a") as f:
+        f.write(f"{msg} ( {datetime.now()} )\n")
+
+
+if __name__ == '__main__':
+    print("enter 'stop'")
+    musicOnLoop("water_sound.mp3", "stop")
+    init_water = time()
+    init_eyes = time()
+    init_exercise = time()
+
+
+    waterSecs = 1800  # 32 min * 60 sec = 1920 sec
+    eyesSecs = 2400   # 40 min * 60 sec = 2400 sec
+    exSecs = 3600     # 60 min * 60 sec = 3600 sec
+
+
+    while True:
+        if time() - init_water > waterSecs:
+            print("Water Drinking time.Enter 'drank' to stop the alarm.")
+            musicOnLoop('water_sound.mp3', 'drank')
+            init_water = time()
+            log_now("Drank water at")
+
+        if time() - init_eyes > eyesSecs:
+            print("Eyes exercise time.Enter 'done' to stop the alarm.")
+            musicOnLoop('Eyes_sound.mp3', 'done')
+            init_eyes = time()
+            log_now("Eyes relaxed at")
+
+        if time() - init_exercise > exSecs:
+            print("Exercise time.Enter 'done' to stop the alarm.")
+            musicOnLoop('workout-on.mp3', 'done')
+            init_exercise = time()
+            log_now("Physical  activity done at")
+
